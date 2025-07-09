@@ -11,6 +11,15 @@ def home(request):
     if request.method == "post":
         nomes = request.post.get("nome")
         estoqueatual = request.post.get("estoque_atual")
+
+        produto = Produto(
+            cod_produto = 'xxx',
+            nome = nomes,
+            categoria = 'comida',
+            estoque_atual = estoqueatual,
+            estoque_minimo = '2'
+        )
+
         print(nomes)
         print(estoqueatual)
 

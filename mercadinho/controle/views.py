@@ -5,6 +5,15 @@ from .models import Produto
 
 
 def home(request):
+
+    print(request.method)
+
+    if request.method == "post":
+        nomes = request.post.get("nome")
+        estoqueatual = request.post.get("estoque_atual")
+        print(nomes)
+        print(estoqueatual)
+
     return render(request, "controle/home.html")
 
 

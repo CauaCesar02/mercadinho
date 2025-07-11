@@ -3,132 +3,234 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Controle de Estoque</title>
+  <title>Controle de Estoque - Mercadinho</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 40px;
-      background-color: #f9f9f9;
+    :root {
+      --vermelho: #e63946;
+      --preto: #1d1d1d;
+      --amarelo: #ffd166;
+      --verde-claro: #a8dadc;
+      --branco: #f1faee;
+      --azul: #457b9d;
     }
+    
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--branco);
+      color: var(--preto);
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      background: linear-gradient(135deg, var(--vermelho), var(--amarelo));
+      padding: 20px 0;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border-radius: 0 0 10px 10px;
+    }
+    
     h1 {
       text-align: center;
+      color: white;
+      margin: 0;
+      font-size: 2.5rem;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
     }
+    
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 25px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      border-left: 5px solid var(--vermelho);
+    }
+    
+    h2, h3 {
+      color: var(--vermelho);
+      margin-top: 0;
+    }
+    
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    input, button {
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: var(--azul);
+      box-shadow: 0 0 0 3px rgba(69, 123, 157, 0.2);
+    }
+    
+    button {
+      background-color: var(--vermelho);
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      grid-column: 1 / -1;
+    }
+    
+    button:hover {
+      background-color: #c1121f;
+      transform: translateY(-2px);
+    }
+    
+    .table-container {
+      overflow-x: auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
     }
-    th, td {
-      padding: 12px;
-      border: 1px solid #ccc;
+    
+    th {
+      background-color: var(--preto);
+      color: white;
+      padding: 15px;
       text-align: left;
     }
-    th {
-      background-color: #eee;
+    
+    td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #eee;
     }
-    .form-container {
-      margin-bottom: 30px;
+    
+    tr:hover {
+      background-color: var(--verde-claro);
     }
-    input, button {
-      padding: 10px;
-      margin: 5px 0;
-      width: 100%;
+    
+    .status-badge {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
     }
-    .search-box {
-      margin-bottom: 20px;
+    
+    .status-danger {
+      background-color: #ffebee;
+      color: var(--vermelho);
+    }
+    
+    .status-warning {
+      background-color: #fff8e1;
+      color: #ff8f00;
+    }
+    
+    .status-success {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+    }
+    
+    .empty-message {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+      font-size: 18px;
+    }
+    
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Controle de Estoque</h1>
+  <header>
+    <div class="container">
+      <h1>Controle de Estoque</h1>
+    </div>
+  </header>
 
-  <div class="form-container">
-    <h3>Adicionar Produto</h3>
+  <main class="container">
+    <section class="card">
+      <h2>Adicionar Novo Produto</h2>
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-grid">
+          <input type="text" id="cod_produto" name="cod_produto" placeholder="Código do Produto" required>
+          <input type="text" id="nome" name="nome" placeholder="Nome do Produto" required>
+          <input type="text" id="categoria" name="categoria" placeholder="Categoria">
+          <input type="number" id="estoque_atual" name="estoque_atual" placeholder="Estoque Atual" min="0" required>
+          <input type="number" id="estoque_minimo" name="estoque_minimo" placeholder="Estoque Mínimo" min="0" required>
+          <button type="submit">Cadastrar Produto</button>
+        </div>
+      </form>
+    </section>
 
-    <form method="post">
-      
-    {% csrf_token %}
-      <input type="text" id="cod_produto" name="cod_produto" placeholder="Código">
-      <input type="text" id="nome" name="nome" placeholder="Nome do Produto">
-      <input type="text" id="categoria" name="categoria" placeholder="Categoria">
-      <input type="number" id="estoque_atual" name="estoque_atual" placeholder="Estoque atual">
-      <input type="number" id="estoque_minimo" name="estoque_minimo" placeholder="Estoque mínimo">
-      <button type="submit">Adicionar</button>
-    </form>
-  </div>
-
-  <!-- <div class="search-box">
-    <input type="text" id="pesquisa" placeholder="Pesquisar produto..." onkeyup="filtrarTabela()">
-  </div> -->
-  {% if produtos %}
-  <table id="tabelaEstoque">
-    <thead>
-      <tr>
-        <th>Código</th>
-        <th>Nome</th>
-        <th>Categoria</th>
-        <th>Estoque atual</th>
-        <th>Estoque mínimo</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for produto in produtos %}
-      <tr>
-          <td>{{ produto.cod_produto }}</td>
-          <td>{{ produto.nome }}</td>
-          <td>{{ produto.categoria }}</td>
-          <!-- <td>R$ {{ produto.preco }}</td> -->
-          <td>{{ produto.estoque_atual }}</td>
-          <td>{{ produto.estoque_minimo }}</td>
-          <!-- <td>{{ produto.data_cadastro|date:"d/m/Y H:i" }}</td> -->
-      </tr>
-      {% empty %}
-      <tr>
-          <td colspan="5">Nenhum produto cadastrado.</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  {% else %}
-    <p>Nenhum produto cadastrado ainda.</p>
-  {% endif %}
-
-  <!-- <script>
-    // Javascript gerado
-    // function adicionarProduto() {
-    //   const nome = document.getElementById('nome').value;
-    //   const quantidade = document.getElementById('quantidade').value;
-    //   const categoria = document.getElementById('categoria').value;
-
-    //   if (nome && quantidade && categoria) {
-    //     const tabela = document.getElementById('tabelaEstoque').getElementsByTagName('tbody')[0];
-    //     const novaLinha = tabela.insertRow();
-
-    //     const celulaNome = novaLinha.insertCell(0);
-    //     const celulaQuantidade = novaLinha.insertCell(1);
-    //     const celulaCategoria = novaLinha.insertCell(2);
-
-    //     celulaNome.textContent = nome;
-    //     celulaQuantidade.textContent = quantidade;
-    //     celulaCategoria.textContent = categoria;
-
-    //     document.getElementById('nome').value = '';
-    //     document.getElementById('quantidade').value = '';
-    //     document.getElementById('categoria').value = '';
-    //   } else {
-    //     alert('Por favor, preencha todos os campos.');
-    //   }
-    // }
-
-    // function filtrarTabela() {
-    //   const filtro = document.getElementById('pesquisa').value.toLowerCase();
-    //   const linhas = document.querySelectorAll('#tabelaEstoque tbody tr');
-
-    //   linhas.forEach(linha => {
-    //     const textoLinha = linha.textContent.toLowerCase();
-    //     linha.style.display = textoLinha.includes(filtro) ? '' : 'none';
-    //   });
-    // }
-  </script> -->
+    <section>
+      <h2>Lista de Produtos</h2>
+      <div class="table-container">
+        {% if produtos %}
+        <table id="tabelaEstoque">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Nome</th>
+              <th>Categoria</th>
+              <th>Estoque Atual</th>
+              <th>Estoque Mínimo</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for produto in produtos %}
+            <tr>
+              <td>{{ produto.cod_produto }}</td>
+              <td>{{ produto.nome }}</td>
+              <td>{{ produto.categoria|default:"-" }}</td>
+              <td>{{ produto.estoque_atual }}</td>
+              <td>{{ produto.estoque_minimo }}</td>
+              <td>
+                {% if produto.estoque_atual <= 0 %}
+                <span class="status-badge status-danger">ESGOTADO</span>
+                {% elif produto.estoque_atual < produto.estoque_minimo %}
+                <span class="status-badge status-warning">BAIXO ESTOQUE</span>
+                {% else %}
+                <span class="status-badge status-success">DISPONÍVEL</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <div class="empty-message">
+          Nenhum produto cadastrado ainda. Adicione seu primeiro produto acima.
+        </div>
+        {% endif %}
+      </div>
+    </section>
+  </main>
 </body>
 </html>
